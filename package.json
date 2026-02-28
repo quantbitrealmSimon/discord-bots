@@ -1,0 +1,30 @@
+{
+  "name": "quantzen-ai-chatbot",
+  "version": "1.0.0",
+  "description": "AI-powered Discord chatbot with conversation memory and premium features",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc -w"
+  },
+  "keywords": ["discord", "bot", "ai", "chatbot", "openai", "kimi"],
+  "author": "QuantBitRealm",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "openai": "^4.85.0",
+    "dotenv": "^16.4.7",
+    "sqlite3": "^5.1.7",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "typescript": "^5.7.3",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
