@@ -1,11 +1,6 @@
-# Use official Node.js LTS image
 FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
-
-# Install dependencies for better-sqlite3
-RUN apk add --no-cache python3 make g++
 
 # Copy package files
 COPY package*.json ./
@@ -13,14 +8,23 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci --only=production
 
-# Copy bot code
-COPY . .
+# Copy source code
+COPY src/ ./src/
 
-# Create data directory for SQLite
-RUN mkdir -p data
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S botuser -u 1001
 
-# Run as non-root user
-USER node
+# Change ownership
+RUN chown -R botuser:nodejs /app
+USER botuser
+
+# Expose port (if you add a web dashboard later)
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/health', (r) => r.statusCode === 200 ? process.exit(0) : process.exit(1))" || exit 1
 
 # Start the bot
 CMD ["node", "src/index.js"]

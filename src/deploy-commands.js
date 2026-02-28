@@ -1,43 +1,60 @@
 const { REST, Routes } = require('discord.js');
-const config = require('./config');
-const fs = require('fs');
-const path = require('path');
+require('dotenv').config();
 
-const commands = [];
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    if ('data' in command && 'execute' in command) {
-        commands.push(command.data.toJSON());
-        console.log(`📋 Registered: ${command.data.name}`);
+const commands = [
+    {
+        name: 'welcome',
+        description: 'Send a test welcome message',
+        default_member_permissions: '8' // Admin only
+    },
+    {
+        name: 'setchannel',
+        description: 'Set the welcome channel',
+        options: [
+            {
+                name: 'channel',
+                description: 'The channel for welcome messages',
+                type: 7, // Channel type
+                required: true
+            }
+        ],
+        default_member_permissions: '8'
+    },
+    {
+        name: 'setrole',
+        description: 'Set the auto-role for new members',
+        options: [
+            {
+                name: 'role',
+                description: 'The role to assign to new members',
+                type: 8, // Role type
+                required: false
+            }
+        ],
+        default_member_permissions: '8'
+    },
+    {
+        name: 'stats',
+        description: 'Show welcome bot statistics'
+    },
+    {
+        name: 'help',
+        description: 'Show welcome bot help and commands'
     }
-}
+];
 
-const rest = new REST({ version: '10' }).setToken(config.token);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
     try {
-        console.log(`🚀 Deploying ${commands.length} commands...`);
+        console.log('🚀 Started refreshing application (/) commands.');
 
-        // For guild-specific deployment (faster for testing)
-        if (config.guildId) {
-            await rest.put(
-                Routes.applicationGuildCommands(config.clientId, config.guildId),
-                { body: commands }
-            );
-            console.log(`✅ Deployed ${commands.length} commands to guild ${config.guildId}`);
-        }
-
-        // For global deployment
-        await rest.put(
-            Routes.applicationCommands(config.clientId),
-            { body: commands }
+        const data = await rest.put(
+            Routes.applicationCommands(process.env.CLIENT_ID),
+            { body: commands },
         );
-        console.log(`✅ Deployed ${commands.length} commands globally`);
 
+        console.log(`✅ Successfully reloaded ${data.length} application (/) commands.`);
     } catch (error) {
         console.error('❌ Error deploying commands:', error);
     }

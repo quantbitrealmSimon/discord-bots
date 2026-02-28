@@ -1,20 +1,25 @@
 {
-  "name": "quantbit-moderation-bot",
+  "name": "welcome-bot",
   "version": "1.0.0",
-  "description": "Professional Discord moderation bot with logging, warnings, and auto-mod features",
+  "description": "A professional Discord welcome bot with auto-role assignment and custom messages",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "deploy": "node src/deploy-commands.js"
+    "deploy-commands": "node src/deploy-commands.js"
   },
-  "keywords": ["discord", "bot", "moderation", "automod"],
+  "keywords": [
+    "discord",
+    "bot",
+    "welcome",
+    "automation",
+    "discord-bot"
+  ],
   "author": "QuantBitRealm",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1",
-    "better-sqlite3": "^9.4.3"
+    "dotenv": "^16.4.5"
   },
   "engines": {
     "node": ">=18.0.0"

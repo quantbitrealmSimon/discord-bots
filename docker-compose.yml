@@ -1,18 +1,24 @@
 version: '3.8'
 
 services:
-  bot:
+  welcome-bot:
     build: .
-    container_name: quantbit-moderation-bot
+    container_name: welcome-bot
     restart: unless-stopped
     env_file:
       - .env
-    volumes:
-      - ./data:/app/data
     environment:
       - NODE_ENV=production
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    volumes:
+      # Optional: persist logs
+      - ./logs:/app/logs
+
+  # Optional: Add Redis for caching/stats
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis_data:/data
+
+# volumes:
+#   redis_data:
